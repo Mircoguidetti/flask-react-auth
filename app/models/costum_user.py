@@ -1,7 +1,7 @@
 import os 
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app import db
+from app import app, db
 
 class CostumUser(db.Model):
     __tablename__ = 'costumuser'
@@ -19,11 +19,11 @@ class CostumUser(db.Model):
         self.password_hash = self.set_password(password)
 
     def set_password(self, password):
-        password_hash = generate_password_hash(password+os.environ['SALT'], method='pbkdf2:sha256:1000')
+        password_hash = generate_password_hash(password+app.config['PASSWORD_SALT'], method='pbkdf2:sha256:1000')
         return password_hash
 
     def check_password(self, password):
-        return check_password_hash(self.password_hash, password+os.environ['SALT'])
+        return check_password_hash(self.password_hash, password+app.config['PASSWORD_SALT'])
 
     def __repr__(self):
         return self.email
