@@ -6,18 +6,17 @@ from application.utils.auth import generate_token
 
 @app.route('/api/login', methods=['POST'])
 def login():
-    auth = request.authorization
+    data = request.get_json()
+    if not data or not data['email'] or not data['password']:
+        return jsonify(message='Could not verify'), 401
 
-    if not auth or not auth.username or not auth.password:
-        return make_response('Could not verify', 401, {'WWW-Authenticate': 'Basic realm="Login required"'})
-
-    user = User.query.filter_by(email=auth.username).first()
+    user = User.query.filter_by(email=data['email']).first()
 
     if not user:
-        return make_response('User {auth.username} not found',401, {'WWW-Authenticate': 'Basic realm="Login required"'})
-    if user.check_password(auth.password):
+        return jsonify(message='User not found'), 401
+    if user.check_password(data['password']):
         
         token = generate_token(user)
         return jsonify({'token': token})
     
-    return make_response('Wrong password', 401, {'WWW-Authenticate': 'Basic realm="Wrong password"'}) 
+    return jsonify(message='Wrong password'), 401
