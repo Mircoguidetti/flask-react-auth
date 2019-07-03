@@ -1,20 +1,20 @@
 from flask import jsonify
-from app.middleware.token import token_required
 
-from app import app
-from app.models.costum_user import CostumUser
+from application import app
+from application.models.user import User
+from application.utils.auth import requires_auth
 
-@app.route('/users', methods=['GET'], endpoint='get_all_users')
-@token_required
+@app.route('/api/users', methods=['GET'])
+@requires_auth
 def get_all_users(current_user):
-    users = CostumUser.query.all()
+    users = User.query.all()
     output = []
     if users:
         for user in users:
             obj = dict()
             obj['username'] = user.username
             obj['email'] = user.email
-            obj['password'] = user.password_hash
+            obj['password'] = user.password
             output.append(obj)
     
     return jsonify({'users': output})
