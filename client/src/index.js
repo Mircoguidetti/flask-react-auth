@@ -7,6 +7,13 @@ import configStore from './store/configStore';
 
 const store = configStore();
 
+store.subscribe(() => {
+    console.log(store.getState())
+});
+
+
+
+
 const jsx = (
     <Provider store={store}>
         <IndexRouter />

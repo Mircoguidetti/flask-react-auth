@@ -1,5 +1,9 @@
 import axios from 'axios';
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+
+import { setToken } from '../../actions/auth';
 
 class Login  extends Component {
     constructor (props) {
@@ -8,12 +12,19 @@ class Login  extends Component {
             token: '',
             email:'',
             password:'',
-            error: ''
+            error: '',
+            redirect: false
         };
 
         this.handleAuthFlow = this.handleAuthFlow.bind(this);
         this.handleEmailChange = this.handleEmailChange.bind(this);
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
+    };
+
+    renderRedirect () {
+        if (this.state.redirect) {
+            return <Redirect to='/' />
+        };
     };
   
     handleAuthFlow (e) {
@@ -34,9 +45,13 @@ class Login  extends Component {
             password: password
 
         }).then((response) => {
-            this.setState({token:response.data.token});
+            this.props.dispatch(setToken({token:response.data.token}));
+            this.setState({error:''});
+            this.setState({redirect:true});
+            
         }).catch((error) => {
             this.setState({error:error.response.data.message});
+            this.props.dispatch(setToken({token:''}));
         });  
     };
 
@@ -53,9 +68,12 @@ class Login  extends Component {
     };
 
     render() {
+    
         return (
             <div>
+            { this.renderRedirect() }
             <h1>Login</h1>
+            
             <form onSubmit={this.handleAuthFlow}>
                 <input
                     onChange={this.handleEmailChange}
@@ -83,4 +101,10 @@ class Login  extends Component {
     };
 };
 
-export default Login;
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth
+    };
+};
+
+export default connect(mapStateToProps)(Login);
