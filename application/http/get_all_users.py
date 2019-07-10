@@ -6,7 +6,7 @@ from application.utils.auth import requires_auth
 
 @app.route('/api/users', methods=['GET'])
 @requires_auth
-def get_all_users(current_user):
+def get_all_users(current_user):           
     users = User.query.all()
     output = []
     if users:

@@ -1,86 +1,54 @@
-import axios from 'axios';
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { Redirect, Link } from 'react-router-dom';
 
-class Login  extends Component {
-    constructor (props) {
-        super(props);
-        this.state = {
-            token: '',
-            email:'',
-            password:'',
-            error: ''
+import AuthForm from './AuthForm';
+import { startLogin } from '../../actions/auth.actions';
+
+const Login = (props) => {
+    const [redirect, setRedirect] = useState(false);
+    
+    const renderRedirect = () => {
+        if (redirect) {
+            return <Redirect to={{
+                pathname: '/',
+                message:props.alert.message
+            }}/>
         };
-
-        this.handleAuthFlow = this.handleAuthFlow.bind(this);
-        this.handleEmailChange = this.handleEmailChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
     };
-  
-    handleAuthFlow (e) {
-        e.preventDefault();
-        const username = this.state.email;
-        const password = this.state.password;
+
+    const handleLogin = (email, password) => {
+        props.startLogin(email, password);
         
-        if (!username) {
-            return this.setState({error:'Email is required'});
-        };
-
-        if (!password) {
-            return this.setState({error:'Password is required'});
-        };
-
-        axios.post('/api/login', { 
-            email: username,
-            password: password
-
-        }).then((response) => {
-            this.setState({token:response.data.token});
-        }).catch((error) => {
-            this.setState({error:error.response.data.message});
-        });  
     };
 
-    handleEmailChange (e) {
-        this.setState({
-            email:e.target.value
-        });
-    };
+    useEffect(() => {
+        if(props.auth.user) {
+           setRedirect(true)
+        } 
+    },[props.auth]);
 
-    handlePasswordChange (e) {
-        this.setState({
-            password:e.target.value
-        });
-    };
-
-    render() {
-        return (
-            <div>
-            <h1>Login</h1>
-            <form onSubmit={this.handleAuthFlow}>
-                <input
-                    onChange={this.handleEmailChange}
-                    type='text'
-                    value={this.props.email} 
-                    placeholder='email'
-                />
-                <input
-                    onChange = {this.handlePasswordChange}
-                    value={this.props.password}
-                    type='password'
-                    placeholder='password'
-                />
-                <button 
-                    type='submit'
-                >
-                    Login
-                </button>
-            </form>
-            {this.state.token}
-            {this.state.error && <p>{this.state.error}</p>}
+    return (
+        <div>
+            { renderRedirect() }
+            <Link to='/'>Go back</Link>
+            <h1>Login</h1> 
+            <AuthForm handleLogin={handleLogin} />
         </div>
+    );
+};
 
-        );
+const mapStateToProps = (state) => {
+    return {
+        auth: state.auth,
+        alert: state.alert,
     };
 };
 
-export default Login;
+const mapDispatchToProps = (dispatch) => {
+    return {
+        startLogin: (email, password) => dispatch(startLogin(email, password))
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

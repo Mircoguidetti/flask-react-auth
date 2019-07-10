@@ -1,11 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
+
 import IndexRouter from './routers/IndexRouter';
+import store  from './_helpers/store';
 
 const jsx = (
-    <div>
+    <Provider store={store()}>
         <IndexRouter />
-    </div>
+    </Provider>
 );
 
 ReactDOM.render(jsx, document.getElementById('app')); 
