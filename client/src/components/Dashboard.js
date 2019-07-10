@@ -1,36 +1,37 @@
-import React, { Component } from 'react';
-import { NavLink } from 'react-router-dom';
-import { connect } from 'react-redux';
+import React from 'react';
+import { connect } from 'react-redux'
+import { Link, NavLink } from 'react-router-dom';
 
-import { verifyToken } from '../actions/auth';
+import { startLogout } from '../actions/auth.actions';
 
-class Dashboard extends Component {
-
-    componentDidMount () {
-        this.props.dispatch(verifyToken({...this.props.auth.token}));
+const Dashboard = (props) => {
+    const handleLogout = () => {
+        props.location.message = ''
+        props.startLogout()
     }
-    render() {
-        
-       
-        return (
-            <div>
-                <p>Token</p>
-                {this.props.auth.token === '' ? 'No token': 'Token is here'}
-                <h1>Dashboard</h1>
-                {!this.props.auth.token ? 
-                    <NavLink to='/login'>Login</NavLink> :
-                    <NavLink to='/login'>Logout</NavLink>
-                }
-            </div>
-        )
-    }
+    return (
+        <div>
+            <h1>Dashboard</h1>
+            {props.auth.loggedIn  ? 
+                <span  onClick={handleLogout}>Logout</span>:
+                <Link to='/login'>Login</Link> 
+            }
+            <p>{props.location.message && props.location.message}</p>
+        </div>
+    );
 };
 
 const mapStateToProps = (state) => {
     return {
-        auth:state.auth
+        auth: state.auth
     };
 };
 
-export default connect(mapStateToProps)(Dashboard);
+const mapDispatchToProps = (dispatch) => {
+    return {
+        startLogout: () => dispatch(startLogout())
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard);
 

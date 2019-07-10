@@ -3,19 +3,10 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import IndexRouter from './routers/IndexRouter';
-import configStore from './store/configStore';
-
-const store = configStore();
-
-store.subscribe(() => {
-    console.log(store.getState())
-});
-
-
-
+import store  from './_helpers/store';
 
 const jsx = (
-    <Provider store={store}>
+    <Provider store={store()}>
         <IndexRouter />
     </Provider>
 );
