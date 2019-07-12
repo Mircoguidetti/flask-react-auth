@@ -14,7 +14,7 @@ def get_all_users(current_user):
             obj = dict()
             obj['username'] = user.username
             obj['email'] = user.email
-            obj['password'] = user.password
+            obj['public_id'] = user.public_id
             output.append(obj)
     
     return jsonify({'users': output})

@@ -1,5 +1,6 @@
 import os 
 from werkzeug.security import check_password_hash, generate_password_hash
+from sqlalchemy.exc import IntegrityError
 
 from application import app, db
 
@@ -29,6 +30,7 @@ class User(db.Model):
     def check_password(self, password):
         password_salt = self.get_password_salt(app)
         return check_password_hash(self.password, password+password_salt)
+    
 
     def __repr__(self):
         return f'Username: {self.username} - Email: {self.email}'

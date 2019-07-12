@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 
 import IndexRouter from './routers/IndexRouter';
-import store  from './_helpers/store';
+import store  from './helpers/store';
 
 const jsx = (
     <Provider store={store()}>

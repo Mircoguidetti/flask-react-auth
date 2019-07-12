@@ -2,7 +2,7 @@ import datetime
 import jwt
 from functools import wraps
 from flask import request, jsonify
-
+from sqlalchemy.exc import IntegrityError
 from application.models.user import User
 from application import app
 
@@ -28,3 +28,5 @@ def requires_auth(f):
 
         return f(current_user, *args, **kwargs)
     return decorated
+
+            

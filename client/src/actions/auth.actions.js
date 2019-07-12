@@ -7,6 +7,9 @@ export const loginSuccess = user => ({ type:'LOGIN_SUCCESS', user });
 // LOGIN_FAILURE
 export const loginFailure = () => ({ type: 'LOGIN_FAILURE' });
 
+// LOGOUT
+const logout = () => ({ type: 'LOGOUT' });
+
 
 // Start login
 export const startLogin = (username, password) => {
@@ -17,16 +20,26 @@ export const startLogin = (username, password) => {
                 dispatch(alertSuccess(`Welcome back ${user.username}`));
             })
             .catch(e => {
-                const error = e.response.data.message
+                const error = e.response.data.message;
                 dispatch(loginFailure())
                 dispatch(alertFailure(error))
             });
     };
 };
 
+export const startRegister = (username, email, password, ownProps) => {
+    return dispatch => {
+        return authServices.register(username, email, password)
+            .then((res) => {
+                dispatch(alertSuccess(`Welcome ${username}, please login to continue`));
+                window.location.href = '/'
+            }).catch(e => {
+                const error = e.response.data.message;
+                dispatch(alertFailure(error));
+            });
+    };
+};
 
-// LOGOUT
-const logout = () => ({ type: 'LOGOUT' })
 
 // Start logout
 export const startLogout = () => {

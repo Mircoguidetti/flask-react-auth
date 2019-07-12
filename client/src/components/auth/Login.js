@@ -1,54 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { Redirect, Link } from 'react-router-dom';
 
-import AuthForm from './AuthForm';
 import { startLogin } from '../../actions/auth.actions';
+import LoginForm from './LoginForm';
 
 const Login = (props) => {
-    const [redirect, setRedirect] = useState(false);
-    
-    const renderRedirect = () => {
-        if (redirect) {
-            return <Redirect to={{
-                pathname: '/',
-                message:props.alert.message
-            }}/>
-        };
-    };
 
     const handleLogin = (email, password) => {
         props.startLogin(email, password);
-        
     };
-
-    useEffect(() => {
-        if(props.auth.user) {
-           setRedirect(true)
-        } 
-    },[props.auth]);
 
     return (
         <div>
-            { renderRedirect() }
-            <Link to='/'>Go back</Link>
             <h1>Login</h1> 
-            <AuthForm handleLogin={handleLogin} />
+            <LoginForm handleLogin={handleLogin} />
+            <Link to='/register'>Register</Link>
         </div>
     );
 };
 
-const mapStateToProps = (state) => {
-    return {
-        auth: state.auth,
-        alert: state.alert,
-    };
-};
+const mapDispatchToProps = (dispatch) => ({
+    startLogin: (email, password) => dispatch(startLogin(email, password)) 
+});
 
-const mapDispatchToProps = (dispatch) => {
-    return {
-        startLogin: (email, password) => dispatch(startLogin(email, password))
-    };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Login);
+export default connect(undefined, mapDispatchToProps)(Login);
