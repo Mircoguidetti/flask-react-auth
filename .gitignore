@@ -14,5 +14,5 @@ dev.py
 .vscode
 
 # dist 
-dist/
+bundle.js
 
