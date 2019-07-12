@@ -10,7 +10,7 @@ module.exports = (env) => {
         mode: isProduction ? 'production': 'development',
         entry: ['@babel/polyfill', './src/index.js'],
         output: {
-            path: path.join(__dirname, '../', 'application', 'static', 'assets', 'dist'),
+            path: path.join(__dirname, '../', 'application', 'static', 'dist'),
             filename: isProduction ? 'bundle.[contenthash].js': 'bundle.js'
         },
         module: {
@@ -41,7 +41,7 @@ module.exports = (env) => {
           new HtmlWebpackPlugin({
             inject: false,
             template: './public/index.html',
-            filename: '../../../templates/index.html'
+            filename: '../../templates/index.html'
           })
         ],
         performance : {
