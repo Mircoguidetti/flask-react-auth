@@ -41,7 +41,7 @@ module.exports = (env) => {
           new HtmlWebpackPlugin({
             inject: false,
             template: './public/index.html',
-            filename: '../../../application/templates/index.html'
+            filename: '../../../templates/index.html'
           })
         ],
         performance : {
